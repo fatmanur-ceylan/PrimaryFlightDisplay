@@ -19,13 +19,12 @@ class PrimaryFlightDisplay(WidgetClass):
     def __init__(self, parent=None):
         super(PrimaryFlightDisplay, self).__init__(parent)
         self.pitch = 0 # yükseklik artırırken artacak azalırken azalacak
-        self.roll = 0 # roll bitch ayarlarına bakaman lazım hesaplamada sıkıntı var artı bu bölgelerin tasarımlarını revize et
+        self.roll = 0 
         self.skipskid = 0
         self.heading = 0 #baş açısı
         self.airspeed = 0
         self.alt = 0
         self.vspeed = 0
-        self.battery = 100
         self.zoom = 0.75
         if WidgetClass == QOpenGLWidget:
             self.setAutoFillBackground(False)
@@ -111,11 +110,10 @@ class PrimaryFlightDisplay(WidgetClass):
         self.sky=QLabel()
         self.sky = QColor(135, 206, 235)  # Sky blue
         self.ground = QColor(139, 69, 19)  # Saddle brown
-        self.font9 = QFont("Arial",10 * z)
-        self.font12 = QFont("Arial", 12 * z)
-        self.font16 = QFont("Arial", 16 * z)
-        self.font20 = QFont('Arial', 11 * z)
-
+        self.font9 = QFont("Arial", int(10 * z))
+        self.font12 = QFont("Arial", int(12 * z))
+        self.font16 = QFont("Arial", int(16 * z))
+        self.font20 = QFont("Arial", int(11 * z))
 
     def paintEvent(self, e):
         dpi = min(self.logicalDpiX(), self.logicalDpiY())
@@ -139,38 +137,6 @@ class PrimaryFlightDisplay(WidgetClass):
 
         self.painter.end()
 
-    # def draw_status(self):
-    #     w = self.geometry().width()
-    #     h = self.geometry().height()
-    #     s = self.scale
-    #     painter = self.painter
-    #     if self.battery is not None:
-    #         painter.setBrush(self.bsbr)
-    #         painter.setPen(self.fg2)
-    #         rect = QRectF(w - 100 * s, h - 50 * s, 100 * s, 50 * s)
-    #         painter.drawRect(rect)
-    #         painter.setBrush(self.hg)
-    #         painter.setPen(self.hg)
-    #         painter.drawRect(w - 98 * s, h - 48 * s, (96 * s) * (self.battery / 100), 46 * s)
-    #         painter.setFont(self.font16)
-    #         painter.setPen(self.fg)
-    #         painter.drawText(rect, Qt.AlignCenter, f"{round(self.battery)}%")
-
-    #     if self.arm is not None:
-    #         painter.setBrush(self.bsbr)
-    #         painter.setPen(self.fg2)
-    #         rect = QRectF(0, h - 50 * s, 100 * s, 50 * s)
-    #         painter.drawRect(rect)
-    #         painter.setBrush(self.pst if self.arm else self.err)
-    #         painter.setPen(self.pst if self.arm else self.err)
-    #         painter.drawRect(2 * s, h - 48 * s, 96 * s, 46 * s)
-    #         painter.setFont(self.font16)
-    #         painter.setPen(self.fg)
-    #         painter.drawText(
-    #             rect,
-    #             Qt.AlignCenter,
-    #             "Armed" if self.arm else "Disarmed"
-    #         )
 
     def draw_vspeed(self):
         painter = self.painter
@@ -190,27 +156,27 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.setBrush(self.bsbr)
         self.bsbr.setAlpha(255)
         painter.setPen(self.fg)
-        painter.drawRect(QRectF(x1, y1, x2 - x1 - 10 * s, y2 - y1))
+        painter.drawRect(QRectF(int(x1), int(y1), int(x2 - x1 - 10 * s), int(y2 - y1)))
         painter.setPen(self.fg3)
         painter.drawLine(QLineF(x1, y1, x1, y2))
         painter.save()
-        painter.setClipRect(QRectF(x1, y1, x2 - x1, y2 - y1))
+        painter.setClipRect(QRectF(int(x1), int(y1), int(x2 - x1), int(y2 - y1)))
         l1 = int(((y1 + y2) / 2 + v * r - y2) / per) - 1
         l2 = int(((y1 + y2) / 2 + v * r - y1) / per) + 1
         for i in range(l1, l2 + 1):
             pos = -i * per + v * r
             if (i % 2) == 0:
                 painter.drawLine(
-                    QLineF(x1, (y1 + y2) / 2 + pos, x1 + 15 * s, (y1 + y2) / 2 + pos)
-                )
+                    QLineF(x1, (y1 + y2 )/ 2 + pos, x1 + 15 * s, (y1 + y2) / 2 + pos
+                ))
                 painter.drawText(
                     QRectF(
-                        x1 + 18 * s,
-                        (y1 + y2) / 2 + pos - 20 * s,
-                        x2 - 18 * s - x1,
-                        40 * s
+                        int(x1 + 18 * s),
+                        int((y1 + y2) / 2 + pos - 20 * s),
+                        int(x2 - 18 * s - x1),
+                        int(40 * s)
                     ),
-                    Qt.AlignVCenter | Qt.AlignLeft,
+                    int(Qt.AlignVCenter | Qt.AlignLeft),
                     str(int(round(abs(i * inc))))
                 )
             else:
@@ -228,12 +194,12 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.setFont(self.font16)
         painter.drawText(
             QRectF(
-                x1,
-                (y1 + y2) / 2 - 25 * s,
-                x2 - x1 - 8 * s,
-                50 * s
+                int(x1),
+                int((y1 + y2) / 2 - 25 * s),
+                int(x2 - x1 - 8 * s),
+                int(50 * s)
             ),
-           Qt.AlignVCenter | Qt.AlignRight,
+           int(Qt.AlignVCenter | Qt.AlignRight),
             str(float(round(abs(v), 1)))
         )
 
@@ -258,7 +224,7 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.setPen(self.fg)
 
         # Draw the main rectangle
-        painter.drawRect(QRectF(x1, y1, x2 - x1 - 10 * s, y2 - y1))
+        painter.drawRect(QRectF(int(x1), int(y1), int(x2 - x1 - 10 * s), int(y2 - y1)))
         painter.setPen(self.fg3)
         painter.drawLine(QLineF(x1, y1, x1, y2))
 
@@ -276,8 +242,8 @@ class PrimaryFlightDisplay(WidgetClass):
             pos = -i * per + self.alt * r
             if (i % 2) == 0:
                 painter.drawLine(QLineF(x1, (y1 + y2) / 2 + pos, x1 + 25 * s, (y1 + y2) / 2 + pos))
-                painter.drawText(QRectF(x1 + 33 * s, (y1 + y2) / 2 + pos - 20 * s, x2 - 33 * s - x1, 40 * s),
-                             Qt.AlignVCenter | Qt.AlignLeft, str(i * inc))
+                painter.drawText(QRectF(int(x1 + 33 * s), int((y1 + y2) / 2 + pos - 20 * s), int(x2 - 33 * s - x1), int(40 * s)),
+                             int(Qt.AlignVCenter | Qt.AlignLeft), str(i * inc))
             else:
                 painter.drawLine(QLineF(x1, (y1 + y2) / 2 + pos, x1 + 15 * s, (y1 + y2) / 2 + pos))
             for j in range(-5, 6):
@@ -298,19 +264,19 @@ class PrimaryFlightDisplay(WidgetClass):
 
         # Draw the current altitude
         painter.setFont(self.font20)
-        painter.drawText(QRectF(x1, (y1 + y2) / 2 - 20 * s, x2 - 30 * s - x1, 40 * s),
-                        Qt.AlignVCenter | Qt.AlignRight, str(round(self.alt)))
+        painter.drawText(QRectF(int(x1), int((y1 + y2) / 2 - 20 * s), int(x2 - 30 * s - x1), int(40 * s)),
+                        int(Qt.AlignVCenter | Qt.AlignRight), str(round(self.alt)))
         
         text_x = x2-15  # X coordinate for the text
         text_y = (y1 + y2) / 2 + 15 * s  # Y coordinate for the text
         painter.setFont(self.font9)
-        painter.drawText(QRectF(text_x - 10 * s, text_y - 10 * s, 20 * s, 20 * s),
-                 Qt.AlignRight | Qt.AlignBottom, "ft")
+        painter.drawText(QRectF(int(text_x - 10 * s), int(text_y - 10 * s), int(20 * s), int(20 * s)),
+                 int(Qt.AlignRight | Qt.AlignBottom), "FT")
 
         # Draw the additional text at the top
         painter.setFont(self.font12)
         painter.setPen(self.fg)
-        painter.drawText(QRectF(x1, y1 - 30 * s, x2 - x1, 30 * s), Qt.AlignCenter, "Altimeter")
+        painter.drawText(QRectF(int(x1), int(y1 - 30 * s), int(x2 - x1), int(30 * s)), Qt.AlignCenter, "Altimeter")
 
     def draw_airspeed(self):
         painter = self.painter
@@ -328,7 +294,7 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.setBrush(self.bsbr)
         self.bsbr.setAlpha(255)
         painter.setPen(self.fg)
-        painter.drawRect(x1 + 10 * s, y1, x2 - x1 - 10 * s, y2 - y1)
+        painter.drawRect(int(x1 + 10 * s), int(y1), int(x2 - x1 - 10 * s), int(y2 - y1))
         painter.setPen(self.fg3)
         painter.drawLine(QLineF(x2, y1, x2, y2))
         painter.save()
@@ -342,12 +308,12 @@ class PrimaryFlightDisplay(WidgetClass):
                     QLineF(x2, (y1 + y2) / 2 + pos, x2 - 25 * s, (y1 + y2) / 2 + pos))
                 painter.drawText(
                     QRectF(
-                        x1,
-                        (y1 + y2) / 2 + pos - 20 * s,
-                        x2 - 33 * s - x1,
-                        40 * s
+                        int(x1),
+                        int((y1 + y2) / 2 + pos - 20 * s),
+                        int(x2 - 33 * s - x1),
+                        int(40 * s)
                     ),
-                    Qt.AlignVCenter | Qt.AlignRight,
+                    int(Qt.AlignVCenter | Qt.AlignRight),
                     str(i * inc)
                 )
             else:
@@ -365,25 +331,25 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.setFont(self.font20)
         painter.drawText(
             QRectF(
-                x1,
-                (y1 + y2) / 2 - 25 * s,
-                x2 - 33 * s - x1,
-                50 * s
+                int(x1),
+                int((y1 + y2) / 2 - 25 * s),
+                int(x2 - 33 * s - x1),
+                int(50 * s)
             ),
-            Qt.AlignVCenter | Qt.AlignRight,
+            int(Qt.AlignVCenter | Qt.AlignRight),
             str  (round(self.airspeed))
         )
 
         text_x = x1+15  # X coordinate for the text
         text_y = (y1 + y2) / 2 + 15 * s  # Y coordinate for the text
         painter.setFont(self.font9)
-        painter.drawText(QRectF(text_x - 35 * s, text_y - 40 * s, 50 * s, 50 * s),
-                 Qt.AlignRight | Qt.AlignBottom, "KNOT")
+        painter.drawText(QRectF(int(text_x - 35 * s), int(text_y - 40 * s), int(50 * s), int(50 * s)),
+                 int(Qt.AlignRight | Qt.AlignBottom), "KNOT")
 
 
         painter.setFont(self.font12)
         painter.setPen(self.fg)
-        painter.drawText(QRectF(x1+5, y1 - 30 * s, x2 - x1, 30 * s), Qt.AlignCenter, "AirSpeed")
+        painter.drawText(QRectF(int(x1+5), int(y1 - 30 * s), int(x2 - x1), int(30 * s)), Qt.AlignCenter, "AirSpeed")
 
     #pusula
     def draw_heading(self):
@@ -399,7 +365,7 @@ class PrimaryFlightDisplay(WidgetClass):
         self.bsbr.setAlpha(128)
         painter.setBrush(self.bsbr)
         self.bsbr.setAlpha(255)
-        painter.drawEllipse(QRectF(w / 2 - x, 17 * h / 16 - x, 2 * x, 2 * x))
+        painter.drawEllipse(QRectF(int(w / 2 - x), int(17 * h / 16 - x), int(2 * x), int(2 * x)))
         for i in range(72):
             trans = QTransform()
             trans.translate(w / 2, 17 * h / 16)
@@ -418,9 +384,9 @@ class PrimaryFlightDisplay(WidgetClass):
                         t = "W"
                     painter.drawText(
                         QRectF(
-                            -20 * s, - x + 15 * s, 40 * s, 40 * s
+                            int(-20 * s), int(- x + 15 * s), int(40 * s), int(40 * s)
                         ),
-                        Qt.AlignCenter | Qt.AlignTop, t
+                        int(Qt.AlignCenter | Qt.AlignTop), t
                     )
                 painter.drawLine(QLineF(0, - x, 0, - x + 15 * s))
             elif i == 9 or i == 27 or i == 45 or i == 63:
@@ -435,13 +401,13 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.drawLine(QLineF(w / 2, 17 * h / 16 - x, w / 2, 17 * h / 16 + x))
         painter.setPen(self.hg4)
         painter.drawPolygon(QPolygonF([
-            QPointF(w / 2 - 7 * s, 17 * h / 16 - x + 17 * s),
-            QPointF(w / 2, 17 * h / 16 - x + 2 * s),
-            QPointF(w / 2 + 7 * s, 17 * h / 16 - x + 17 * s)
+            QPointF(int(w / 2 - 7 * s), int(17 * h / 16 - x + 17 * s)),
+            QPointF(int(w / 2), int(17 * h / 16 - x + 2 * s)),
+            QPointF(int(w / 2 + 7 * s), int(17 * h / 16 - x + 17 * s))
         ]))
         painter.setPen(self.fg3)
         painter.setBrush(Qt.NoBrush)
-        painter.drawEllipse(QRectF(w / 2 - x, 17 * h / 16 - x, 2 * x, 2 * x))
+        painter.drawEllipse(QRectF(int(w / 2 - x), int(17 * h / 16 - x), int(2 * x), int(2 * x)))
 
 
     def draw_markers(self):
@@ -452,10 +418,10 @@ class PrimaryFlightDisplay(WidgetClass):
         for i in range(1, 20):
             size = 80 * s * ((1 / 4) * i + 1 / 2) * 10 / (5 + i)
             if -(4 * r * 1.1 * s) < p + i * r * s < 4 * r * 1.1 * s:
-                self.draw_marker(p + i * r * s,
+                self.draw_marker(int(p + i * r * s),
                                  size if (i % 2) == 0 else 40 * s, f"  {i*r//10}", 255 - 255 * abs(p + i * r * s) / (4 * r * 1.1 * s))
             if -(4 * r * 1.1 * s) < p - i * 50 * s < 4 * r * 1.1 * s:
-                self.draw_marker(p - i * r * s,
+                self.draw_marker(int(p - i * r * s),
                                  size if (i % 2) == 0 else 40 * s, f"  {i*r//10}", 255 - 255 * abs(p - i * r * s) / (4 * r * 1.1 * s))
 
     def draw_marker(self, p, r, t="", alpha=128):
@@ -464,7 +430,7 @@ class PrimaryFlightDisplay(WidgetClass):
         h = self.geometry().height()
         b = -self.roll * (pi / 180)
         s = self.scale
-        self.fg.setAlpha(alpha)
+        self.fg.setAlpha(int(alpha))
         self.fg3.setColor(self.fg)
         painter.setPen(self.fg3)
         painter.drawLine(QLineF(
@@ -478,7 +444,7 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.setTransform(trans)
         painter.setPen(self.fg)
         painter.setFont(self.font16)
-        painter.drawText(r, p + 8 * s, t)
+        painter.drawText(int(r), int(p + 8 * s), t)
         painter.resetTransform()
         self.fg.setAlpha(255)
         self.fg3.setColor(self.fg)
@@ -493,7 +459,7 @@ class PrimaryFlightDisplay(WidgetClass):
         x = min(w / 2 - 50 * s, h / 2 - 50 * s)
         painter.setPen(self.fg3)
         painter.setBrush(self.fg)
-        painter.drawArc(w / 2 - x, h / 2 - x, x * 2, x * 2, 45 * 16, 90 * 16)
+        painter.drawArc(int(w / 2 - x), int(h / 2 - x), int(x * 2), int(x * 2), int(45 * 16), int(90 * 16))
         if b < -7 * pi / 32 or b > 7 * pi / 32:
             if -pi / 4 < b < pi / 4:
                 painter.setPen(self.fg3)
@@ -505,11 +471,11 @@ class PrimaryFlightDisplay(WidgetClass):
                 painter.setPen(self.err3)
                 painter.setBrush(self.err)
                 b = pi / 3 if b > 0 else -pi / 3
-            painter.drawArc(w / 2 - x, h / 2 - x, x * 2, x * 2, 30 * 16, 120 * 16)
+            painter.drawArc(int(w / 2 - x), int(h / 2 - x), int(x * 2), int(x * 2), int(30 * 16), int(120 * 16))
         else:
             painter.setPen(self.fg3)
             painter.setBrush(self.fg)
-        painter.drawEllipse(w / 2 - 2 * s, h / 2 - x - 2 * s, 4 * s, 4 * s)
+        painter.drawEllipse(int(w / 2 - 2 * s),int(h / 2 - x - 2 * s),int(4 * s), int(4 * s))
         ps = [-pi / 6, pi / 6, pi / 3, -pi / 3, pi /
               4, -pi / 4, pi / 18, -pi / 18, pi / 9, -pi / 9]
         for a in ps:
@@ -519,16 +485,16 @@ class PrimaryFlightDisplay(WidgetClass):
             trans.translate(w / 2, h / 2)
             trans.rotateRadians(a)
             painter.setTransform(trans)
-            painter.drawText(-10 * s, -x - 10 * s, str(abs(round(a / pi * 180))))
-            painter.drawEllipse(0 - 2 * s, -x - 2 * s, 4 * s, 4 * s)
+            painter.drawText(int(-10 * s), int(-x - 10 * s), str(abs(round(a / pi * 180))))
+            painter.drawEllipse(int(0 - 2 * s), int(-x - 2 * s), int(4 * s), int(4 * s))
             painter.resetTransform()
         trans = QTransform()
         trans.translate(w / 2, h / 2)
         trans.rotateRadians(b)
         painter.setTransform(trans)
-        painter.drawEllipse(-5 * s, -x - 5 * s, 10 * s, 10 * s)
+        painter.drawEllipse(int(-5 * s), int(-x - 5 * s), int(10 * s), int(10 * s))
         px = -20 * s - self.skipskid * 20 * s
-        painter.drawRect(px, -x + 15 * s, 40 * s, 10 * s)
+        painter.drawRect(int(px), int(-x + 15 * s), int(40 * s), int(10 * s))
         painter.resetTransform()
 
     def draw_cursor(self):
@@ -547,7 +513,7 @@ class PrimaryFlightDisplay(WidgetClass):
         painter.drawPath(path)
         painter.setPen(self.hg)
         painter.setBrush(self.hg)
-        painter.drawEllipse(w / 2 - 4, h / 2 - 4, 8 * s, 8 * s)
+        painter.drawEllipse(int(w / 2 - 4), int(h / 2 - 4),int(8 * s), int(8 * s))
 
     def compute_horizon(self, p, b):
         w = self.geometry().width()
